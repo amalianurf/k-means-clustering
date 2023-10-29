@@ -59,11 +59,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-8 py-2">
-                    <h3 class="py-2">Cluster Chart</h3>
-                    <canvas id="barChart" width="400" height="200" class="px-4"></canvas>
-                    <canvas id="pieChart" width="400" height="400" class="px-4"></canvas>
-                </div>
                 <div class="pt-2 pb-4">
                     <h3 class="py-2">Word Clouds</h3>
                     <img src="{{ url_for('static', filename='word-clouds.png') }}" alt="Word Clouds" class="container-fluid">
@@ -71,76 +66,5 @@
             </main>
         </div>
     </div>
-
-    <script>
-        var data = {{ cluster_word_counts | tojson|safe }};
-        var labels = Object.keys(data);
-        var datasets = [];
-
-        for (var clusterId in data) {
-            var wordCounts = Object.values(data[clusterId]);
-            datasets.push({
-                label: 'Cluster ' + clusterId,
-                data: wordCounts,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            });
-        }
-
-        var bar = document.getElementById('barChart').getContext('2d');
-
-        var chart = new Chart(bar, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        function generateRandomColor() {
-            var r = Math.floor(Math.random() * 256);
-            var g = Math.floor(Math.random() * 256);
-            var b = Math.floor(Math.random() * 256);
-            var a = Math.random().toFixed(2);
-
-            return `rgba(${r}, ${g}, ${b}, ${a})`;
-        }
-
-        var colors = [];
-        for (var i = 0; i < 100; i++) {
-            colors.push(generateRandomColor());
-        }
-
-        var pie = document.getElementById('pieChart').getContext('2d');
-
-        var chart = new Chart(pie, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(data[clusterId]),
-                datasets: [{
-                    data: wordCounts,
-                    backgroundColor: colors,
-                    borderColor: colors,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>
